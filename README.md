@@ -13,13 +13,10 @@ d0hn_Study
 <br>
 
 ## Java
-<hr/>
 <br>
 
 ## JavaScript
-<hr/>
 <br>
 
 ## Coding_Test
-<hr/>
 <br>
