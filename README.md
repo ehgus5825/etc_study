@@ -6,17 +6,16 @@ d0hn_Study
 <br>
 블로그 주소 : https://ehgus5825.github.io/ <br>
 프로젝트 1 : https://github.com/ehgus5825/Refrigerator-Recipe<br>
-프로젝트 2 : coming soon!<br>
+프로젝트 2 : https://github.com/ehgus5825/newlec_Prj<br>
+프로젝트 3 : coming soon!<br>
+프로젝트 4 : coming soon!<br>
+프로젝트 5 : coming soon!<br>
 <br>
 <hr/>
 
-<br>
-
-## Java
-<br>
-
-## JavaScript
-<br>
-
-## Coding_Test
-<br>
+## [Java](java/)
+## [JavaScript](javascript/)
+## [Coding_Test](coding_test/)
+## [Docker](docker%20tutorial/)
+## [Crawling](crawling/)
+## [Computer_science](computer%20science/)
