@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Student Test</title>
+</head>
+<body>
+	<h4>도서 관리</h4>
+	<hr>
+	<table>
+		<thead>
+			<tr><td>isbn </td><td>Title</td><td>Author</td><td>price</td></tr>
+		</thead>
+		<tbody id="tbodyBook"></tbody>
+	</table>
+	<hr>
+	<form>
+		<table>
+			<tbody>
+				<tr><td>Title</td><td><input type="text" name="title" id="inputTitle"></td></tr>
+				<tr><td>Author</td><td><input type="text" name="author" id="inputAuthor"></td></tr>
+				<tr><td>price</td><td><input type="text" name="price" id="inputPrice"></td></tr>
+			</tbody>
+		</table>
+	</form>
+	<div style="border: 1px; margin: auto; text-align: center">
+		<button id="btnInsert">등록</button>
+		<button id="btnUpdate">수정</button>
+		<button id="btnDelete">삭제</button>
+		<button id="btnClear">초기화</button>
+	</div>
+	
+	<script>
+		var CURRENT_ID;
+		
+		window.onload = function(){
+			
+			listBook();
+			
+			// 이벤트 핸들러 등록
+			document.querySelector("#btnInsert").onclick = insertBook;
+			document.querySelector("#btnUpdate").onclick = updateBook;			
+			document.querySelector("#btnDelete").onclick = deleteBook;
+			document.querySelector("#btnClear").onclick = clear;
+		}
+	
+		async function listBook(){
+			// 목록
+			// get /students
+			try{
+				let response = await fetch('/books');
+				let data = await response.json();
+				makeListHtml( data );
+			}catch(error){
+				console.log(error)
+			}
+		}
+		
+		function makeListHtml(list){
+			let listHtml = ``;
+			list.forEach( el => {
+				let isbn = el.isbn;
+				let title = el.title;
+				let author = el.author;
+				let price = el.price;
+				
+				listHtml += `<tr style="cursor: pointer;" data-bookisbn=${isbn}><td>${isbn}</td><td>${title}</td><td>${author}</td><td>${price}</td></tr>`;
+			});
+			
+			document.querySelector("#tbodyBook").innerHTML = listHtml;
+			
+			makeListHtmlEventHandler();
+		}
+		
+		function makeListHtmlEventHandler(){
+			document.querySelectorAll("#tbodyBook tr").forEach( el => {
+				el.onclick = function(){
+					let isbn = this.getAttribute("data-bookisbn");
+					detailBook(isbn);
+				}
+			});
+		}
+		
+		async function detailBook(studentId){
+			// 상세
+			// get /students/123			
+			let url = '/books/' + studentId;
+			
+			try{
+				let response = await fetch(url);
+				let data = await response.json();
+				makeDetailHtml( data );
+			}catch(error){
+				console.log(error)
+			}
+		}
+		
+		function makeDetailHtml(detail){
+			console.log(detail);
+			
+			CURRENT_ID = detail.isbn;
+			
+			document.querySelector("#inputTitle").value = detail.title;
+			document.querySelector("#inputAuthor").value = detail.author;
+			document.querySelector("#inputPrice").value = detail.price;
+			
+		}
+		
+		async function insertBook(){
+			// fetch + rest api
+			// /students POST
+			let book = {
+				title : document.querySelector("#inputTitle").value,
+				author : document.querySelector("#inputAuthor").value,
+				price : document.querySelector("#inputPrice").value
+			}
+
+			let urlParams = new URLSearchParams(book);
+			let fetchOptions = {
+				method : "POST",
+				body : urlParams
+			}
+			
+			try{
+				let response = await fetch('/books', fetchOptions)
+				let data = await response.json();
+				console.log(data);
+				listBook();
+				clear();
+			}catch(error){
+				console.log(error)
+			}
+		}
+		// Spring MVC 와 비교해서 PUT 을 URLSearchParams 를 이용해서 보낼 수 있다.
+		async function updateBook(){
+			// fetch + rest api
+			// /students PUT
+			let url = '/books/' + CURRENT_ID;
+			
+			let book = {
+				isbn : CURRENT_ID,
+				title : document.querySelector("#inputTitle").value,
+				author : document.querySelector("#inputAuthor").value,
+				price : document.querySelector("#inputPrice").value
+			}
+
+			let urlParams = new URLSearchParams(book);
+			let fetchOptions = {
+				method : "PUT",
+				body : urlParams
+			}
+			
+			try{
+				let response = await fetch(url, fetchOptions)
+				let data = await response.json();
+				console.log(data);
+				listBook();
+				clear();
+			}catch(error){
+				console.log(error)
+			}
+		}
+		
+		async function deleteBook(){
+			let url = '/books/' + CURRENT_ID;
+
+			let fetchOptions = {
+				method : "DELETE",
+			}
+			// fetch + rest api
+			// /students DELETE
+			try{
+				let response = await fetch(url, fetchOptions)
+				let data = await response.json();
+				console.log(data);
+				listBook();
+				clear();
+			}catch(error){
+				console.log(error)
+			}
+		}
+		
+		function clear(){
+			document.querySelector("#inputTitle").value = "";
+			document.querySelector("#inputAuthor").value = "";
+			document.querySelector("#inputPrice").value = "";
+		}
+		
+	</script>	
+</body>
+</html>
