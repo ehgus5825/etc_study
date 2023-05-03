@@ -1,0 +1,907 @@
+step 1. 자바스크립트 -
+: 웹브라우전에서 html이나 css를 동적으로 제어하기 위한 언어
+
+◆ 자바스크립트의 부상 : 
+예전엔 자바스크립트가 웹브라우저를 제어하는 클라이언트 언어여서 서버는 다른 언어를 이용하여 만들어야 했지만 지금은 node.js의 부상으로 자바스크립트로 서버도 제어하게 되어 단 하나의 언어로 모든 개발을 가능하게 할 수 있게 됨.
+
+◆ 네이티브앱 -> 크로스플랫폼 : 자바스크립트가 점점 웹을 벗어나서 광범위하게 사용되고 있음.
+
+◆ Math.func() : 
+ Math.pow(3,2);       // 9,   3의 2승 
+ Math.round(10.6);    // 11,  10.6을 반올림
+ Math.ceil(10.2);     // 11,  10.2를 올림
+ Math.floor(10.6);    // 10,  10.6을 내림
+ Math.sqrt(9);        // 3,   3의 제곱근
+ Math.random();       // 0부터 1.0 사이의 랜덤한 숫자 
+
+◆ 비교연산자 : ===는 자료형까지 같아야 참 ==> c 에서 '==' 와 같음(권장)
+    == :  alert(1=='1');              //true
+  === :  alert(1==='1');             //false 
+
+◆ 데이터 타입 : 
+  Boolean (ex : true, false) 
+  Number (ex : 1, 2)
+  String (ex : "a", 'b')
+  undefined : 값이 없음 / 초기화 없이 생성된 변수의 값
+  null : 값이없음을 명시적으로 표현(값이 없음을 저장?) 
+  NaN : 숫자가 아니라는 뜻  (ex : 0/0, "aawd" / 3)
+
+ -> 헷갈리게 하지말고 웬만하면 "===" 을 쓰자!!
+
+Tip.) https://dorey.github.io/JavaScript-Equality-Table/
+ 
+◆ alert / prompt / confirm
+ alert : 확인 메시지. 그냥 띄우고 사라짐. 알림창 // 확인 == 닫기
+ prompt : 입력창. 사용자가 입력하는 값을 받아옴. // 확인 => 문자열 값, 취소 => null
+ confirm : 사용자에게 선택을 요구함, true or false // 확인 => true, 취소 false
+
+◆ 함수 
+ 자바스크립트는 함수의 리턴 자료형과, 매개변수의 자료형을 정의부분에 따로 지정을 하지 않는다.
+ 따라서 함수정의 내부에서 조정해주어야 한다.
+ - 함수도 변수이기 때문에 객체나 배열의 원소가 될수 있음.
+
+ ⁕ 유효범위 : 스택원리 - 스코프
+  - 변수 사용시 var 사용 습관화, 전역변수 사용하지 않는것 권장
+  - 지역변수를 사용해야 하는 이유 : 같은 이름의 전역변수값을 바꿔버리는 의도하지 않은 문제가 발생하여 
+    시스템상 오류를 범할 수 있음.
+  - 불가피하게 전역변수를 사용해야 하는 경우 : 객체의 속성으로 변수를 관리하여 사용 함. 익명함수 사용    
+  - 많은 언어들이 스코프 기준으로 유효범위를 정하지만 자바스크립트는 함수안에서 유효 (☆☆☆)
+  - 정적 유효범위 : 함수는 선언된 시점에서의 유효범위를 갖는다.
+ ⁕ 함수 지향
+  ==> 값으로서의 함수와 콜백(다시 공부!!!!)
+  - 값으로서의 함수(☆☆☆) : 함수가 값이 될 수 있다. 객체의 값으로 포함될 수 있다.(메소드)
+   -> 함수 내부에서 행해진 작업과 상관에 따른 리턴값이 그 함수의 값이 된다.
+   -> 함수는 값이기 때문에 다른 함수의 인자로 전달될 수 있다.
+     Ex.  function cal(func, num){
+	return func(num)
+          }
+          function increase(num){
+	return num+1
+          }
+          function decrease(num){
+              return num-1
+          }
+          alert(cal(increase, 1));
+          alert(cal(decrease, 1));       
+ 
+   -> 함수는 변수에 저장 될 수 있다. 
+     Ex.  var a = function(){ }  // function a(){ }
+ 
+   -> 함수는 함수의 리턴값으로도 사용할 수 있다. 
+     Ex.  function cal(mode){
+              var funcs = {
+                  'plus' : function(left, right){return left + right},
+                  'minus' : function(left, right){return left - right}
+              }
+              return funcs[mode];
+          }
+          alert(cal('plus')(2,1));
+          alert(cal('minus')(2,1));   
+
+  - 콜백 : 처리의 위임, 값으로 전달된 함수는 호출될 수 있기 때문에 이를 이용하면 함수의 동작을 완전히 바꿀                수 있다.
+  - 비동기 처리 : 
+    - 클라이언트의 행동에 따른 서버의 작용이 아니라 클라이언트의 행동과 관련없이 백그라운드에서 이루어지       고 있는 작업
+    - 서버와 통신이 된 이후에 값을 인자로 받아 콜백함수로 사용자에게 작업을 위임하여 사용
+  - 클로저 : 내부함수가 외부함수의 맥락에 접근할 수 있는 것
+    - 자바스크립트는 함수 안에서 또 다른 함수를 선언할 수 있음 => 함수도 값이고 변수이기 때문에.
+    - 외부함수의 실행이 끝나서 외부함수가 소멸된 이후에도 내부함수가 외부함수의 변수에 접근할 수 있다.	
+    - 왜 필요한가 => private한 변수를 만들 수 있음. 
+     Ex.  
+        function factory_movie(title){
+            return {
+                get_title : function () { return title; },
+                set_title : function(_title){ title = _title; }    <= 이거 사용으로만 값을 바꿀수 있음
+            }
+        }
+        ghost = factory_movie('Ghost in the shell');
+        matrix = factory_movie('Matrix');   => factory_movie의 title 변수지만 matrix와 ghost의 title은 엄연히 다름
+        matrix.title = "매트릭스";      -----(X)
+        matrix.set_title("매트릭스");   -----(O)
+    - 외부함수가 실행되면 새로운 지역변수를 포함하는 클로저가 생성 -> ghost와 matrix는 서로 독립된 객체
+  - Arguments : arguments라는 변수에 담긴 숨겨진 유사배열. 호출할때 입력한 인자가 담겨있음.
+    - 실제로는 arguments 객체의 인스턴스임.
+    - arguments.length : 호출할떄 입력한 인자의 수
+    - function.length는 정의할 때 매개변수의 개수
+    - 매개변수가 인자보다 많으면 초과된 매개변수는 undefined임
+    - 매개변수가 (a, b, c) 이고 인자는 (1, 2, 3, 4 ,5) 이면 arguments[0] == a // 
+  - 함수의 호출 : 함수는 function이라는 객체임. => 내장함수로 apply()를 가지고 있음.
+    - apply 호출 : sum(1, 2,)  => sum.apply(null, [1,2]);
+    - apply(객체) // 함수내에서 this사용 => sum.apply(o1) == o1.sum(); 
+    - 전역에 있는 함수를 객체 내 메소드처럼 사용
+     Ex.   function sum(){
+               var _sum = 0;
+               for(name in this) { _sum += this[name]; }
+               return _sum;
+            }
+            alert(sum.apply(o1)) // 6
+.
+◆ 객체 : 순서가 없는 원소의 모음 (개별 식별자 : 문자(열)) ex) { "abc(키)" : 10(값) ]} // 속성 미리추가
+ - 생성방법 : ex) var a = new Object();   , var a = {}; var a = { 속성1 : 배열, 속성2 : 변수, 속성3 : 함수}
+ - 사용방법 : a['abc'] = 10; , alert(a['abc']); // a.abc;, a.func(); a['func'](); // for in 사용
+ - 원소 추가 : a['없는key'] = 값
+ - for in : for( 키 in 객체) => 객체안의 모든 속성을 다 돌려봄 // 키는 "abc" 값은 a["abc"] 
+
+ ⁕ 표준내장객체 :
+  Array :  배열 
+   - .push : 뒤에 추가
+   - .li : 복수의 원소 뒤에 추가
+   - .unshift : 다 한칸씩 뒤로 이동한 다음(+1) 맨앞에 추가
+   - .splice(인덱스부터, 개수만큼 선택, 이 원소로 대체 : 제거 후 대체 
+   - .shift: 처음 원소 제거
+   - .pop : 끝 원소 제거
+   - .sort : 원소 정렬 => 콜백 함수 사용하여 사용자 정의 가능
+   - .reverse : 원소 역순 정렬
+  String : 문자열 
+   - .match() :  문자열 추출 // 문자열.match(문자열/정규표현식); // Ex. 'dwdwd'.match(pattern);
+   - .replace() : 문자열 치환 // 문자열.replace(변경 문자열/정규표현식, 바꿀 문자열);
+      // Ex. 'dwdwd'.replace(pattern, 'A');
+
+ ⁕ 객체지향 : 크고 견고한 프로그램을 만들기 위한 노력의 산물.
+   - 객체지향 프로그래밍 : 로직을 상태와 행위로 이루어진 객체로 만드는 것. 
+   - 객체지향 프로그래밍은 좀 더 현실을 잘 반영하기 위한 노력의 산물. 고도의 추상화 능력이 필요. 지식을 넘어      서는 지혜의 영역
+   - 부품화 :  메소드는 부품화의 예. 연관된 메소드와 그 메소드가 사용하는 변수들을 분류하고 그룹핑(객체화)하      는 것 Ex. 파일과 디렉토리
+   - 캡슐화 : 내부의 동작 방법을 단단한 케이스 안으로 숨기고 사용자에게는 그 부품의 사용방법만 노출
+   - 인터페이스 : 부품과 부품을 서로 교환(부품들 간의 약속) / 이질적인 것들이 결합하는 것을 막아주는 역할도       함. 
+ - 생성자와 new : 생성자는 객체를 만드는 역할을 하는 함수이다.
+   - 자바스크립트에서는 클래스가 존재하지 않음. 기존언어는 생성자가 클래스 안에 있음. 자바스크립트는 생성     자는 그냥 함수일 뿐임.
+   - this를 사용해서 중복 제거
+     Ex. function Person(name){
+             this.name = name;
+             this.introduce = function(){
+                 return 'My name is '+this.name; 
+             }   
+          }
+          var p1 = new Person('egoing');
+          document.write(p1.introduce()+"<br />");
+   - 전역객체 : 모든 객체는 전역객체의 프로퍼티이다. Ex. func(); 와 window.func(); 둘다 실행이 됨. window 생략
+   - this : 
+
+  
+◆ 배열 : 순서가 있는 원소의 모음 (인덱스)
+ - 생성방법 : ex) var a = new Array('a', 'b');  , var a = ['a', 'b'];
+ - 사용방법 : a[0] = 123, alert(a[0]);  a[0]() // for문 사용
+ - 원소 추가 : a.push('a') 등등
+
+◆ 모듈 : <script></script>의 내용을 js파일에 저장하여 불러와서 사용함.  => 재활용성 ↑↑
+ - 불러오기 <script src="파일이름.js"></script> => 이런식으로 node.js나 jquery도 사용하는 것.
+    ==> 다른 개발자들이 만든 유능한 로직을 나도 사용할 수 있음. 
+
+◆ UI와 API
+ - UI : 유저 인터페이스 (사용자)
+ - API : 애플리케이션 프로그래밍 인터페이스 (개발자)
+ - 계층이 존재 / 그 계층 사이를 잇고 있는 것이 인터페이스
+ - 사용자 -> (UI) -> 개발자                                   (<---- 인프라 제공)
+     ㄴ대중기술개발자(웹, 게임, 앱, 윈도우....) -> (API) -> 브라우저 -> (Inf) -> 운영체제 -> (Inf) -> C++
+        -> (Inf) -> 어셈블리어 -> (Inf) -> 기계어..... // 소프트웨어공학
+                                                                    ㄴ> (Inf) -> 전자공학 -> (Inf) -> 전기공학 ......  
+◆ 래퍼런스
+ - 자바스크립트의 API ex) Math, Array, String... 
+   : ECMAScript(표준문서), 자바스크립트 사전(생활코딩), 자바스크립트 래퍼런스(MDN), jscripr 래퍼런스(MSDN)
+ - 호스트 환경의 API 
+   : 웹브라우저 API(alert, prompt...) / Node.js API / Google Apps Script API .....
+
+◆ 정규표현식 : 하나의 언어!라고 인식
+ - 문자열에서 특정한 문자를 찾아내는 도구.
+ - 정규표현식이 아닌 문자열에서도 특정한 문자를 찾아내는 메소드 존재(.match() / .replace() )
+ - js <----> 정규 표현식 <-----> 자바, C++,....
+ - 컴파일(패턴) -> 실행 
+ - 생성 : var 변수 = /패턴/ or new RegExp('패턴')
+    // Ex. var pattern = /a/; or var pattern = new RegExp('a'); ==> 정규표현식 객체 생성;
+ - 실행(메소드) : 추출, 테스트, 치환! 
+  - .exec() : 해당 문자를 추출 // Ex. pattern.exec('adawd') => ["a"] or null
+  - .test() : 패턴과 일치하는지 참과 거짓으로 나옴 // Ex. pattern.exec('adawd') => true or false
+  - String.replace : ↑↑위에 설명이 되어 있음.
+ - 옵션 : 정규표현식 뒤에 i 나 g를 붙힌다. 
+  - i : 대소문자 구별하지 않음 / Ex. var oi = /a/i; or new RegExp(/a/, 'i'); 
+  - g : 모든 문자열 다 추출 / Ex. var og = /a/g; or new RegExp(/a/, 'g');
+ - 패턴을 괄호로 그룹화 할 수 있는데 $기호로 그룹을 변수처럼 사용할수 있음.
+    Ex. var pattern = /(\w+)\s(\w+)/; var result = str.replace(pattern, "$2, $1");
+  
+ - 치환 활용 코드 :
+  var urlPattern = /\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*/gim;     	               //url 패턴
+  var content = '생활코딩 : http://opentutorials.org/course/1, 네이버 : http://naver.com ';       //내용
+  var result = content.replace(urlPattern, function(url){                                     //페턴 -> 함수의 리턴값
+        return '<a href="'+url+'">'+url+'</a>';			           // 콜백함수.
+  });
+  console.log(result);
+
+Tip. 정규표현식
+ - 패턴에 대한 내용은 제외. 여기서 https://opentutorials.org/course/909 찾아보길
+ - 정규표현식 시각화 : http://www.regexper.com/
+ - 정규표현식 빌더 : http://www.regexr.com/
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+현규형이 알려준 사이트 :
+로고 만들어줌 : https://hatchful.shopify.com/
+로고 -> minmap : http://romannurik.
+
+hub.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(255%2C%20255%2C%20255)&crop=0&backgroundShape=square&effects=none&name=ic_launcher
+이미지 배경 제거 : https://www.remove.bg/ko
+리액트 훅 : https://velog.io/@velopert/react-hooks
+리액트 네이티브 기초 : https://velog.io/@ckstn0777/React-Native-%EA%B8%B0%EC%B4%88%ED%8E%B8-1
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+현규형 꿀팁 :
+Material Theme : 에디터의 배경 색상을 바꿀 수 있다.
+
+Material Icon Theme : 에디터에 나오는 파일들의 아이콘을 좀 더 입체적으로 나타내 준다.
+
+Prettier - Code formatter : 
+- ctrl + , => 설정으로 이동
+- save 검색 => Format On Save에 체크(자동 저장)
+- Prettier 검색 => Tab width를 2로 변경
+- Prettier quote 검색 => JavaScript Quote Style과 TypeScript Quote Style을 single로 변경.
+
+Bracket Pair Colorizer : 갈호에 색감을 넣어서 가독성을 올려준다.
+
+Indent Rainbow : 들여쓰기 부분에 하이라이트를 넣어 가독성을 올려준다.
+
+Auto Rename Tag : HTML 태그를 바꿀때 앞 태그만 바꾸면 뒷 태그는 자동으로 변경된다.
+
+CSS Peek : HTML에서 ctrl + 클래스 클릭을 하면 자동으로 CSS파일의 해당 클래스로 이동한다.
+
+HTML CSS Support : HTML의 클래스를 CSS파일에 있는 클래스로 바꾸고싶을때 해당 클래스 이름을 자동 완성해준다.
+
+HTML to CSS autocompletion : CSS파일에서 HTML에 정의된 클래스를 자동 완성으로 뜨게 해준다.
+
+Live Server : 코드를 수정한것을 저장만 하면 브라우저에 바로 적용되어 나온다.
+
+Emmet : 코드를 빠르고 쉽게 작성하게 도와준다.
+- ! + Tab => HTML 자동 완성
+- 원하는 태그 + Tab => 태그 자동 완성
+- 원하는 태그 + (. or #) Name + Tab => 원하는 태그에 클래스 또는 아이디 입력하고 자동 완성
+- div>ul>li*5 + Tab
+- div>ol+ul + Tab => 형제 노드
+- ^ => 상위에 형제 노드를 만듬
+- () => 여러 그룹을 묶어서 만들 수 있다.
+- {} => 태그안에 텍스트 넣을 수 있음
+- $ => 자동으로 숫자를 할당 한다.
+- p>lorem + Tab => 의미없는 문단을 만들어 준다. 단어의 양도 추가 가능
+
+// mySQL/mariaDB 연동 라이브러리
+react-native-my-sql-connection
+
+// 토스트 메세지 띄우는 라이브러리
+react-native-toast-message
+
+// 달력 나오게하는 라이브러리
+@react-native-community/datetimepicker
+
+// 날짜 포맷 변경 라이브러리
+moment
+
+// 콤보박스 라이브러리
+react-native-dropdown-picker
+
+--------------------------------------------리액트공부----------------------------------------------------------------------------
+
+create-react-app [프로젝트이름] <---- 프로젝트 생성
+
+리액트 -> 자바스크립트 의존.
+페이스북에서 만든 자바스크립트 UI 라이브러리.
+컴포넌트 기능(사용자 정의 태그를 만듬) - 가독성 , 모듈화, 유지보수 편리
+
+공부전략 본질적인 것 : coding -> run -> deploy
+
+npm : 노드js로 만들어진 프로그램을 쉽게 설치해주는 일종의 앱스토어
+
+◆ js 코딩하는 법 :
+ public : 
+ㄴindex.html : 웹브라우저 상에서 보여지는 화면 // <div id="root"></div>가 있음
+scr :                                                           ↑↑                    
+ㄴindex.js :  import App from './App'; ReactDOM.render(<App />, document.getElementById('root');
+※ import App from './App';의 App과 ReactDOM.render(<App />, document.getElementById('root');의 <App/>의 이름이 서로 다르면 안됨. 또 './App'는 파일이름이기 때문에 다른 이름이면 안됨(./App.js)
+ㄴApp.js : 사용자 정의 태그<App>의 실제 구현 /
+   class App  extends Component { render(){
+    return (
+      <div className="App">
+       이 부분에 수정하고 구현하면 됨..
+      </div>
+    );
+  }
+}
+
+◆ CSS 코딩하는 법 :  (index.js <->index.css)  <- (App.js <-> App.css)
+
+◆ 배포하는 법 : 최적화
+npm run build
+npx serve -s build
+실제로 서비스할 때는 빌드 안에 있는 파일들을 사용하면 된다. 웹서버의 다큐먼트 루트, 웹서버가 문서를 찾는 최상위 디렉토리에다가 빌드 디렉토리 안쪽에 있는 파일들을 위치시키면 된다.
+
+◆ 리액트가 없다면 : 사용자 정의 태그로 축약할 수 없다면... 일일이 다 코딩을 해야한다?
+
+◆ 컴포넌트 만들기 :  가독성 ↑, 복잡성 ↓, 중복 X
+class Subject extends Component{                  
+  render(){
+    return(
+      <header>
+        <h1>WEB</h1>
+        world wide web!
+      </header>
+    );
+  } // 함수
+} // 컴포넌트 만들기 
+
+class App extends Component {
+  render(){
+    return (
+      <div className="App">
+         <Subject></Subject> // 여기서 사용
+      </div>
+    );
+  }
+}
+
+
+태그 파일 만든 거에 
+import { Component } from "react" 있어야함
+export default 파일 이름
+
+태그 사용 파일에 
+import 파일이름 from "./파일이름" 있어야함
+export default 파일 이름
+
+class 클래스이름 extend component {
+    constructor(props){
+        super(props);
+        => state 초기화, 정의
+    }    
+    render(){   //클래스 실행시 렌더 실행 -> return
+        => 코드 작성
+        return(
+             ==> html이 보여지는 부분
+        )
+    }
+}
+
+◆ props : 
+<header>
+        <h1>{this.props.title}</h1> //타이틀
+        {this.props.sub} // 내용
+</header>
+사용시 : 
+<Subject title="WEB" sub="world wide web!"></Subject> // 내용을 바꾸면 달라져서 화면에 출력
+<Subject title="React" sub="For UI"></Subject>
+
+◆ React Deveeloper Tools : 
+- 설명서를 볼 줄 아는 법 => 너무 장황하거나, 너무 빈약하거나 
+- 현재의 상태를 측정하고 분석하는 법
+ㄴ> 질문하고 검색하는 법이 가장 중요 // 독립하는 것이 가장 중요
+React -> community -> tools // 확장 프로그램 다운 
+
+◆ Component 파일로 분리하기 :
+App.js : import 컴포넌트이름 from "./컴포넌트이름";
+컴포넌트이름.js : 
+import { Component } from 'react'; // 필수
+컴포넌트 내용 적기
+export default 컴포넌트이름; // 사용허가
+
+◆ State 소개 : 
+잘만들어진 components는 외부의 props와 내부의 state가 철저하게 분리되어 있어야함
+props : 사용자가 컴포넌트를 사용하는 입장에서 중요한 것 / 사용자가 접근하는 것
+state : props의 값에 따라서 내부의 구현에 필요한 데이터 / 실제로 컴포넌트를 구현할 때 좀더 복합적으로 다양한 일들을 하는 컴포넌트를 만들때 필요한 필수적인 요소..
+
+◆ State 사용 : 
+컴포넌트가 실행될 때 constructo의 함수가 먼저 실행이 되어서 초기화를 담당한다.
+App.js : 
+constructor(props){
+    super(props);
+    this.state = { subject:{title:'WEB', sub:'World Wide Web!'}} //constructor에 state값을 지정
+}
+사용 : 상위 -> 하위
+<Subject 
+    title={this.state.subject.title} //props에 state값을 넣음
+    sub={this.state.subject.sub}>
+</Subject>
+Subject.js : 
+<header>
+     <h1>{this.props.title}</h1> //props를 통해서 state값을 받음
+     {this.props.sub}
+</header>
+
+◆ key : 
+App.js : 
+constructor(props){
+    super(props);
+    this.state = {
+      contents:[
+        {id:1, title:'HTML',desc:'HTML is for information'},
+        {id:2, title:'CSS',desc:'CSS is for design'},
+        {id:3, title:'JavaScript',desc:'JavaScript is for interactive'},  
+      ] // constructor에 state값을 지정(배열로 만듬)
+    }
+  }
+사용 : <TOC data={this.state.contents}></TOC> //props를 통해서 state 값을 넣음
+TOC.js :
+var lists = [];
+var data = this.props.data
+var i = 0;
+while(i < data.length){
+    lists.push(<li key={data[i].id}><a href={"/content/"+data[i].id}>{data[i].title}</a></li>);
+    i = i+1;
+} // state값을 data들을 배열에 따로 저장해서
+return(
+    <nav>
+        <ul>
+            {lists} // 배열의 내용을 출력
+        </ul>
+    </nav>
+);
+
+◆ 이벤트 state props 그리고 render 함수
+- render() : 어떤 HTML을 그릴 것인가를 결정하는 것이 render()
+- 리액트에서는 props의 값이나 state 값이 바뀌면 해당되는 컴포넌트에 render()가 호출되도록 약속되어있다. props나 state 값이 바뀌면 화면이 다시 그려진다
+App.js : 
+constructor 안 : this.state = { mode:'welcome', welcome:{title:'Welcome', desc:'Hello, React!!'}, }
+render(){
+var _title, _desc = null;
+if(this.state.mode === 'welcome'){
+    _title = this.state.welcome.title;
+    _desc = this.state.welcome.desc;
+}
+else if (this.state.mode === 'read'){
+    _title = this.state.contents[0].title;
+    _desc = this.state.contents[0].desc;
+}
+return(<Content title={_title} desc={_desc}></Content>);
+}
+mode를 통해서 값을 바꿀수 있음
+
+◆ 이벤트 설치 - 이벤트에서 state 변경하기 - .bind() - setState()
+debugger : 이게 있는 위치에서 멈춤
+<a href="/" onClick={function(e){ // onClick 이벤트
+            console.log(e);
+            e.preventDefault(); // 페이지 리로드 안함 / 기본적인 동작 금지
+            this.setState({ //state 설정 
+            mode:'welcome'
+});}.bind(this)}>  // this를 찾게 해줌.
+
+.bind(this) : 엮는다. 묶어준다. // this값이 없을 때 강제로 this를 주입함
+-> .bind(객체) // 객체를 주입하여 복제함,, this를 넣어서 this를 찾아줌..
+
+setState({변경하고 싶은 내용을 담음}) // constructor 이후에는 this.state.mode = 'welcome'이런거 안됨 // 몰래 바꾼 샘
+랜더가 호출되지 않음(일을 안함) // setState()와 같은 함수를 이용 // 
+
+◆ 컴포넌트 이벤트 만들기 
+App.js
+태그 안 props로 onChangePage 만들어서 
+onChangePage={function(e){
+    this.setState({mode:"welcome"});
+}.bind(this)}
+
+Subject.js
+onChangePage라는 props를 불러서 실행시킴  ==>> App.js에서 정의한 onChangePage가 실행
+ㄴ> onClick 이벤트 안에 넣어두고 function(e){
+    e.preventDefault();
+    this.props.onChangePage()
+}
+
+TOC.js도 바꿔줌 ↑↑
+
+◆ 컴포넌트 이벤트 만들기 2(클릭 옵션마다 글바꾸기)
+App.js :
+constructor > state // selected_content_id: 정의
+mode 부분 반복문으로 돌려서 (i <this.state.contents.length)로 해서 맞으면 그 거 저장.
+<TOC><TOC> 부분 function(id) 받아서 setState({selected_content_id : Number(id)});
+
+TOC.js :
+onClick={function(e){  //function(id,e)
+    e.preventDefault();
+    this.props.onChangePage(e.target.dataset.id);
+    // this.props.onChangePage(id);
+}.bind(this)}; //bind(this, data[i].id);
+
+◆ 베이스 캠프 :
+props : read only. / can not be modified
+state : changes can be asynchronous / can be modified using this.setState
+props -> [components(state)] -> dom
+
+◆ create 구현 : 소개
+Create /Read / Update /Delete
+- 새로운 컴포넌트의 form이 추가 될것
+- 정보를 입력하고 저장하면 App 컴포넌트의 content의 목록에 추가될 것
+=> 생성기능
+
+◆ create 구현 : mode 변경 기능
+onChangeMode() 함수 인자 교환을 통해서 모드 변경 구현
+Control.js :
+e.preventDefault();
+this.props.onChangeMode('create');
+
+App.js
+=>onChangeMode={function(_mode){
+    setState({mode : _mode});
+}.bind(this)}
+
+◆ create 구현 : mode 전환 기능
+태그를 변수에 담아서 사용할 수 도 있음
+ex)  App.js
+_article = <ReadContent title={_title} desc={_desc}></ReadContent>
+_article = <CreateContent></CreateContent>
+
+◆ create 구현 : form
+<form action="/create_process" method="post" // action => 전송될 페이지, method : post => 전송 방식
+ onSubmit={function(e){ ~~~~}.bind(this)} > // submit 버튼을 누르면 함수가 실행됨
+<input type="text">
+<textarea>
+<input type="submit"> // placeholder="아무것도 없을때 뜨는거"
+</form> 
+
+◆ create 구현 : onSubmit 이벤트
+ this.props.onSubmit(e.target.title.value, e.target.desc.value);
+CreateContent.js :
+e.target.title.value : form에서 text
+e.target.desc.value : form에서 textarea => 인자로 전달
+App.js :
+function(_title, _desc){
+this.max_content_id = this.max_content_id + 1; // 새로운 추가기 때문에 마지막에 +1
+==>> 객체를 배열에 push
+}
+
+◆ create 구현 : contents 변경 / imutable / shouldComponentUpdate
+push 말고 concat을 사용 권장 // push는 직접적, concat은 간접적(복사본 생성) => concat 사용 안됨..
+push 원본에 더하기 / concat 복사본에 더하기 / Array.from() // 배열 or Object.assign() //객체 복사본 생성한 것에 더하기
+push => this.state.contents.push({id : " , title : " , desc : " }) 
+            this.setState( contents : this.state.contents)
+            // shouldComponentUpdate에서 기존의 것 4개 / 새로운 것 4개 => 불필요한 랜더링
+concat => var _contents = this.state.contents.concat({id : " , title : " , desc : " })
+            this.setState( contents : _contents)
+            // shouldComponentUpdate에서 기존의 것 3개 / 새로운 것 4개 => 바뀐것이 없다면 랜더링 하지 않음
+array.from => var _contents = Array.from(this.state.contents);
+                contents.push({id : " , title : " , desc : " })
+                this.setState( contents : _contents)
+            // shouldComponentUpdate에서 기존의 것 3개 / 새로운 것 4개 => 바뀐것이 없다면 랜더링 하지 않음
+imutable : 무조건으로 복사본 생성하는 라이브러리
+shouldComponentUpdate(newProps, newState)
+: true & false를 리턴하여 선택적으로 런더링을 하도록 함
+true ==> render()함수 실행
+false ==> render()함수 실행 X
+newProps : 바뀐 props의 값
+newState : 바뀐 State의 값
+ex)
+if(newProps.data === this.props.data){
+    return false;  // 기존과 같으면 랜더링 X
+}
+return true;   // 이 구문까지 왔다는 것은 if문에 걸리지 않았기 때문에 랜더링 O
+
+◆ update 구현
+read에서 사용했던 반복문 getReadContent()함수로 만들어서 Update부분에도 사용 
+=> Update에서도 선택한 항목에 대해서 변경해야 하기 때문에 
+=> UpdateContent로 data 전송
+
+◆ update 구현 : form
+<UpdateContent.js>
+value={this.props.data.title} 
+// value에 직접 props를 넣으면 리액트에서 알아서 read only로 만들어 버림
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+contrutor(props){
+    super(props);
+    this.state={
+        title : this.props.data.title
+    }
+}
+~~~중략~~~~
+value={this.state.title} 
+// 하지만 이렇게 해도 read only임 / onChange함수로 바꿔줘야함 (setState())
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+contrutor(props){~~~중략~~~}~~~~
+value={this.state.title}
+onChange={function(e){ this.setState({title : e.target.value});}.bind(this)} 
+// fuction부분 중복..
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+constructor에 inputFormHandler = inputFormHandler.bind(this) 라고 해주면 .bind(this) 적지 않고 사용
+inputFormHandler()라는 함수 정의
+inputFormHandler(e){
+    //this.setState({title : e.target.value}); //title인지 desc인지 알아서 찾아주는 코드는?
+    this.setState({ [e.target.name] : e.target.value}); // 
+}
+onChange={this.inputFormHandler} 
+
+◆ update 구현 : state 변경
+UpdateContent.js :
+App.js로 식별자를 줘야 변경가능 하기 때문에 id값 hidden으로 만듬.
+onSubmit으로 id, titlt, desc 등등 다 넘겨줌..
+
+App.js
+max_content_id 딱히 필요 X
+Array.from()으로 복사본을 받은뒤
+while()을 복사본 length만큼 돌려주는데 if로 우리가 식별자로 받아온 _id와 같다면 
+복사본의 [i]의 내용을 우리가 onSubmit의로 받아온 값으로 바꿔 주고 setState 해주면 됨..
+
+※ js파일 끼리 상호작용이 가능해야만 update가 가능해진다. state와 props, onSubmit함수 등등으로 가능...
+
+◆ delete 구현
+Control.js의 onChangeMode가 실행되면 mode가 delete로 바뀌기 때문에 App.js의 Control 태그에서 바꿔주면 됨..
+mode가 delete이면 => 삭제 {
+    window.confirm("알림내용") => True or False // if문으로 사용
+    참이면 => { 
+        일단 state.contents 복사 후 반복문으로 마지막으로 선택된 id 찾음
+        그 찾은 배열의 요소를 삭제 // 복사본.splice(i,1) => break
+    }
+    거짓이면 => 아무것도 안함 // welcome
+    state 변경 : 모드 welcome, contents : 선택된 요소가 삭제된 contents
+}
+mode가 delete가 아니면 => mode 변경
+
+◆ 수업을 마치며
+=> react-native 개발
+
+--------------------------------------------------React class vs functionf----------------------------------------------------
+
+◆ React class vs function style - 수업 소개 
+컴포넌트를 만드는 두가지 방법 : 클래스와 함수가 있다 
+클래스 : 리액트 기능을 풀파워로 쓸수 있지만 클래스 문법을 알아야하고 좀 장황하다.
+함수 : 함수 문법만 알면 사용 가능 하지만 기능이 부족함.
+- state 기능이 없었음 / 생성변경소모에 대한 life cycle api를 사용할 수 없었다 
+ => hook이라는 개념이 도입 !! (사용가능 임)
+둘다 지원이 가능해짐
+
+◆ React class vs function style - 수업의 목표
+개념용 예제
+class : render(return())
+function : return ()
+
+◆ React class vs function style - 클래스에서 state 사용법 
+props를 받아서 state에 담아서 다음 컴포넌트에 prop로 준다
+this.setState()를 써서 state의 값을 바꾼다.
+
+◆ React class vs function style - 함수에서 state 사용법 hook
+import React, { useState } from 'react'
+function FuncComp(props){ //함수형 컴포넌트에서 인자로 props를 인자로 받음
+var [A, setA] = useState(props.initNumber) // useState()로 props를 state로 사용
+}
+A는 받은 props 
+setA는 받은 props을 바꿔주는 함수
+
+◆ React class vs function style - 클래스에서 라이프 사이클 구현하기
+componentWillUnmount() -> 소멸시 불려져서 정리하는 함수
+componentWillMount() -> render()가 불려지기 전에 수행하는 함수
+componentDidMount() -> render()가 불려진 후에 수행하는 함수
+shouldComponentUpdate(nextProps, nextState) -> render()을 할지 안 할지에 대한 함수
+componentWilllUpdate(nextProps, nextState) -> 값이 바뀌었을 때 다시 render()하기 전에 불러지는 함수
+componentDidUpdate(nextProps, nextState) -> 값이 바뀌었을 때 다시 render()한 후에 불러지는 함수
+
+◆ React class vs function style - 함수에서 라이프 사이클 구현하기
+일반적으로 return() 부분이 일반적인 render()와 같음
+import React, { useEffect } from 'react' //side effect에서 side가 생략 됨.. return 부분이 maineffect
+useEffect : useEffect(function(){ '내부 내용' }) //render()가 끝났을 때 수행 ( == componentDidMount() /componentDidUpdate()) // 여러 개를 설치할수있다. 
+clean up : useEffect(function(){ 
+	// 여기 안에 return 부분에 함수를 적어주면 이것이 componentWillUnmount()와 같은 실행을 한다.
+	return fuction(){'소멸시 실행될 내용'}
+})  // 대체로 값이 바뀌면 새로 useEffect를 부르기 전에 return부분의 함수가 먼저 실행되어 정리 후 useEffect 불러짐
+skipping effect :  useEffect(function(){ '내부 내용' }, ['여기인자']) 배열로 인자를 넣으면 그 인자가 변했을때만 useEffect가 불러지게됨.. 좀 더 효율적
+※ componentDidMount만 불려지게 하는 방법(최초 1회만 불려지는 방법) : 
+useEffect(function(){ 
+	//'내부 내용' 
+	return function () {
+		//여기에 코딩을하면 componentWillUnmount()과 같은 실행을 함..
+		//위와 같은 내용에서 return부분에 함수로 코딩하면 렌더링 할 때마다 소멸과 생성을 반복함...
+	};
+}, []) // 배열안에 인자를 넣어주지 않음 그러면 계속 새로고침을 해줘도 update를 하지 않음 
+
+◆ React class vs function style - 정리 겸 수업을 마치며
+Tip) { funcShow ? <FuncComp initNumber={2}></FuncComp> : null } // 
+  var [funcShow, setFuncShow] = useState(true)와 같이 state로 만들고 
+  버튼을 이용하여 funcShow 값 바꿈.. => true면 <FuncComp></FuncComp> false면 null
+
+====>> 수업이 끝났지만 라이프 사이클에 대한 부분은 좀 더 의문점이 있는게 componentWillMount()와 componentWilllUpdate(), shouldComponentUpdate(nextProps, nextState) 는 useEffect로 구현이 되어있는지와 
+shouldComponentUpdate(nextProps, nextState)는 렌더링을 할지 말지에 대한 해결책이라서 프로그램의 효과에 탁월한 것인데 구현이 되어있지 않다는 점이 좀 의문이 들고 더 공부해야할 부분이라고 생각함
+
+------------------------------------------------react-native----------------------------------------------------------------
+
+------------------------------------------------ Git ----------------------------------------------------------------
+
+소개 : 깃은 프로젝트의 복잡성을 획기적으로 낮출 수 있음
+- 버전관리, 백업, 협업
+
+- CLI - 버전관리 : 
+ ㄴ Working tree(버전으로 만들어지기 전/파일을 수정하는 곳, 수정한 파일) -> Staging Area(버전을 만들려고 하는 파일을 올려놓는 곳/도마 위) -> Repository(버전이 저장되는 곳/만들어진 버전)
+ ㄴ git init : initialize repository // 저장소 초기화
+ ㄴ .git : respository // 저장소 - 절대 삭제하면 안됨
+ ㄴ git status : working tree status // working tree의 상태를 보기
+   ㄴ> noting to commit, working tree clean == 수정 사항이 없다.  
+   ㄴ> Untracked files : 트랙킹이 안된 파일이 있음
+   ㄴ> Changes to be committed : 파일이 버전에 올라가 있다.
+   ㄴ> Changes not staged for commit : staging area에 있지 않은 수정 사항이 working tree에 있다.
+ ㄴ git add 파일이름 : add to staging area // staging area에 파일을 올림
+   ㄴ> git add . : 현재 디렉토리 안의 모든 파일을 add
+   ㄴ> git add 디렉토리 : 이 디렉토리 안의 모든 파일을 add
+ ㄴ git commit -m "버전 정보" : create version // 버전을 생성하다
+   ㄴ> git commit -am "버전정보" : add와 commit 한번에 함 // 대신에 add가 한번 이상은 되어 tracked 상태가 된 파일에 한해서만 commit
+   ㄴ> git commit -m은 커맨드라인에서 직접 커밋메시지를 적을 때 사용
+   ㄴ> git commit 은 기본에디터가 떠서 커밋메시지를 작성하고 저장하면 메시지가 됨 // 여러줄을 길게 적을려면 사용
+   ㄴ> git commit -amend : 현재 브랜치의 버전의 커밋 메시지를 수정
+ ㄴ git log :  show version : 버전 보기 / q로 나감
+   ㄴ> git log --stat : 버전 보기 / 변경 내용 보기
+   ㄴ> git log -p : 버전마다의 차이를 보여줌
+ ㄴ git diff : show changes / 마지막 버전과 위킹트리의 차이점을 보여주는 것
+ ㄴ git checkout 버전키 : 헤더가 해당 버전을 가리킴 // HEAD -> master : 헤드가 최신버전을 가리키고 있다. 
+   ㄴ> git checkout master : 마스터를 가리키게 함
+ ㄴ git reset --hard 버전키 : 이 버전키가 되겠다 // 버전을 지울뿐만 아니라 수정하고 있던것도 지움 
+ ㄴ git revert : 되돌리기 // 되돌리는 버전의 윗버전으로 리버트 // 되돌리는 버전을 다시 버전화 // 역순으로 리버트 한다. (충돌이 없게 하기 위해)   
+
+- CLI branch & conflict : 
+ ㄴ git log --all --graph --oneline : 한줄로 그래프화하여 모든 버전을 볼수 있음
+ ㄴ git branch : 현재 브랜치들의 목록을 불러옴 // master은 기본 브랜치 // *는 현재 속해 있는 브랜치(head가 가리키는)
+   ㄴ> git branch 이름 : "이름"으로 된 브랜치를 만듬
+   ㄴ> (HEAD -> master) : 헤드가 마스터를 가리키고 있음  
+ ㄴ git checkout "이름" : "이름"으로 된 브랜치로 헤더를 바꿈 // 브랜치 전환 // 그 브랜치의 마지막 저장된 상태로 파일이 변경 됨
+ ㄴ git merge "이름" // 현재 브랜치에서 "이름"의 브랜치를 가져와서 병합
+   ㄴ> a에 b를 병합하고 싶다 => 브랜치의 head를 a로 바꾸고 b를 merge 명령에서 지정
+   ㄴ> 같은파일, 다른부분 병합 : 위와 같음
+   ㄴ> 같은파일, 같은부분 병합 : comflict(충돌)가 발생 => 그 부분만 발생 (git status => Unmerged paths : both modified : ~~.txt) 
+    // 병합된 부분을 나눠 놓음 => 그 부분을 변경하고 저장 => git add ~~.txt(내가 해결했어!) => git commit(병합 완료)
+   ㄴ> base --> a --> m'(merge commit) 
+             ∖--> m --↗
+   ㄴ> 2way 병합은 기존 베이스는 병합에 사용되지 않아서 새로 생성된 버전끼리 병합함. 그래서 변경된 내용이 다르기만하면 충돌이 발생함
+   ㄴ> 3way 병합은 기존 베이스와 함께 병합을 진행하여 베이스와 다르게 변경이 되었다면 그 부분을 채택하여 병합하고 버전들의 
+    모든 부분이 변경된 부분만 충돌이 일어남
+   ㄴ> 외부 도구를 이용한 병합 : 참고 ^^ // git p4mergetool => 필요하면 찾아보기 ^^
+ ㄴ 수업을 마치며 :  git workflow : git flow // 사례 분석 || cherry-pick || rebase
+ ㄴ 부록 : 
+   ㄴ> detached 상태 : Head가 branch가 아닌 버전을 직접 가리키고 있다. 
+
+- 백업 :  git => 제한적이지만 쉬운 방법 // 호스팅 
+ ㄴ push : local repository(내컴퓨터)에서 remote repository 소스를 업로드 하는 것
+   ㄴ> 업로드 할때 한번만 원격 저장소와 로컬의 브랜치를 지정해주면 됨
+   ㄴ> git push --set-upstream origin master // 이후엔 그냥 git push
+   ㄴ> git push -u origin master 
+   ㄴ> 아이디, 비밀번호를 인증해야함
+ ㄴ clone : 새로운 local repository로 remote repository 소스를 복제하여 가져오는 것
+   ㄴ> git clone 원격저장소의 HTTPS의 주소 (디렉토리명)[생략가능] => 생략하면 주소의 마지막 디렉토리로 이름이 지정
+ ㄴ pull :  remote repository(내컴퓨터)에서  local repository로 소스를 가져오는 것
+   ㄴ> git pull : 최신버전을 알아서 받아옴
+ ㄴ git log로 원격저장소가 어딜 가리키는지 까지 알 수 있음
+ ㄴ 저장소 생성 : new repository // puplic만 가능(github)
+ ㄴ 공부의 방향 : 우리는 HTTP를 사용 // 통신방법
+ ㄴ 원격저장소와 연결 : git remiote add origin 원격저장소의 HTTPS의 주소 // add => 원격저장소 추가 
+   // origin  == 원격저장소의 HTTPS의 별명(바꿀 수 있음/관습적) 
+   ㄴ> git remote => 원격저장소의 목록이 보임 // git remote -v => 목록과 함께 HTTPS 주소까지 보임
+ ㄴ 오픈소스 : 오픈소스를 clone하여 받아와서 사용할 수 있고 나도 public으로 저장소를 만들면 오픈소스를 제공할 수 있음
+ ㄴ 수업을 마치며 : SSH /  issues tracker / 햡업 준비 완료 
+
+- 협업 : branch + 백업 
+ ㄴ 깃허브의 setting에서 wirte/read/admin으로 설정을 할 수 있음 
+ ㄴ 이메일로 초대
+ ㄴ pull - commit - push
+ ㄴ git fetch -> git merge FETCH_HEAD -> commit -> push
+   ㄴ> git pull == git fetch; git merge origin/master
+   ㄴ> git fetch는 원격 저장소만 업데이트
+   ㄴ> git fetch; git merge FETCH_HEAD(최근에 fetch한 것을 병합)
+ ㄴ 오픈소스 참여하기(patch) : 
+    ㄴ> patch :  push할 수 없는 사용자가 패치 데이터를 push할 수 있는 사람에게 보내서 프로젝트에 참여할 수 있는 방법
+    ㄴ> git format-patch 기존 버전(마지막으로 작업이 되있던) 커밋키 : 기존 버전과 업데이트한 버전들을 모두 패치화하여 파일로 만들어줌 ex) 0001-work-4b.patch / 0002-work-5b.patch
+    ㄴ> 이메일로 보내줘서 push가 가능한 사람이 버전 업데이트
+    ㄴ> git am -3 -i 패치파일 : 디렉토리안의 패치파일 업데이트 / -3 : 3way 방법(merge) / -i : 패치파일마다의 적용의 의견을 물어봄((y)es / (n)o / (e)dit / (v)iew patch / (a)ccept all ) edit => 커밋메시지 업데이트 
+  ㄴ 오픈소스 참여하기(pull request) :
+    ㄴ> fork - repository 복제 
+    ㄴ> 작업 후 compare -> pull request 신청
+    ㄴ> 기존의 소유자가 pull request를 허가하면 복제 작성자의 내용이 기존의 저장소에 추가됨
+  ㄴ 수업을 마치며 : code review - gerrit (코드 품질 검사) / issue tracter / 
+    ㄴ> pull -> commit -> push
+
+----------------------------------------------AWS - EC2, RDS, S3--------------------------------------------------------
+프리티어 10/23 만료
+
+EC2 : 독립된 컴퓨터 한채를 통째로 임대해주는 서비스
+- 인스턴스 : 컴퓨터 1대가 인스턴스 1개 / 임대한 컴퓨터 현황 보기
+- 보안 설정 : 2단계 인증 - google otp - 인증키
+ ㄴ 디바이스 분실시 :  휴대폰 / 이메일 이용 
+- 지역 : 아시아 태평양 서울 // 위치가 멀면 멀수록 네트워크가 느려짐 : www.cloudping.info
+ ㄴ 가용 영역 : 지역 내에서는 전용선 / 지역과 지역은 인터넷으로 연결되어 있다.
+- 런치 인스턴스 -> OS선택(우분투) -> t2.micro(프리티어) -> 인스턴스 개수 : 1 -> 저장장치 : 8기가 -> 태그추가 -> http 추가 -> 검토 및 시작 -> 시작 -> 키페어 생성 및 다운로드 -> 인스턴스 생성 성공
+ ㄴ 마우스 오른쪽 -> terminate(삭제) -> 요금이 청구 되지 않음
+- 인스턴스 타입
+ ㄴ AMI 선택 : 운영체제 선택(윈도우, 우분투, 맥.. 등등) / 인스턴스 유형 선택 : 사양 설정(프리티어) / 
+- 가격 정책 : 프리티어만 사용할 예정
+ ㄴ 한대를 쭉켜놔도 무료 / 컴퓨터의 저장장치 30GB / 한번에 15GB의 전송량까지 가능
+ ㄴ 온 디맨드 인스턴스 : 끄고 키고 할 수 있음 / sql 서버가 설치되어 있으면 가격이 확뜀 
+ ㄴ 프리티어 사양을 돈주고 써도 한달에 14400원 + a 정도
+ ㄴ 예약 인스턴스 : 할인권 / 미리 구매해서 좀 더 싸게 삼 / 스팟 인스턴스 : 가격이 달라짐 
+- 인스턴스 장치 설정 : 30기가 까지 사용가능 / 기본 설정으로...
+- 태그와 보안그룹 : 
+ ㄴ 태그 : 인스턴스가 어떤역할인지 누가 관리하는지 메모하는것 / 인스턴스에 대한 설명
+ ㄴ 보안그룹 : 인스턴스에 접근하는 권한과 관련해서 지정 / 네트워크에 대한 지식이 필요(생활코딩 인터넷)
+   ㄴ SSH, HTTP, HTTPS 등등 있음 // 인스턴스에 접속하는 여려가지 방법 // 일정한 방법들, 제한된 방법만 우리의 인스턴스로 네트워크를 통해서 접속하는 것을 허용하는 그런 정책을 정하는 화면임 
+   ㄴ Source : anywhere, my IP, custom IP
+   ㄴ SSH : 리눅스, 유닉스 원격제어방식 - my IP, custom IP
+   ㄴ HTTP : 월드 와이드 웹 - anywhere
+   ㄴ RDP : 윈도우 제어 방식 - my IP, custom IP
+- 인스턴스 비밀번호 생성 : 키페어 파일을 받아서 이 키페어 파일을 통해서 인스턴스로 접속
+- Window에서 리눅스 인스턴스로 접속
+ ㄴ putty 사용 해야할 듯.. => 사용 성공 https://mozi.tistory.com/191 참고 ..
+- 리눅스에서 웹서버 사용 : 
+ ㄴ 아파치 다운로드 성공 /  도메인 : ec2-3-35-18-154.ap-northeast-2.compute.amazonaws.com 
+- AMI : 아마존 머신 이미지 
+ ㄴ 이미지 : 컴퓨터가 가지고 있는 상태를 얼려서 나중에 똑같이 복원할 수 있는 데이터 / ex) os, 소프트웨어, 설정, 실행중인 파일
+- AWS Marketplace : os, 소프트웨어, 설정 등이 다 갖춰진 AMI를 다운받을 수 있는 곳 / 앱스토어 느낌/ 우리가 처음에 받았던 우분투(리눅스) os의 인스턴스도 os가 깔려있는 AMI를 다운받았다라고 생각할 수 있음. // => 당장 필요하진 않을 것 같아서 실습은 X
+- Scalabilty : 가상화 / 종량제 / 가상머신 : 물리적기계 -> 운영체제 -> 가상머신(S/W) -> 운영체제(N개) / EX) VMWare, virtualBox, parallels /
+ ㄴ 기업용 : AWS 회사는 물리적 기계를 많이 구비해놓고 인스턴스 규격에 따라 컴퓨터를 잘라서 사용할 수 있게 해줌 / 저렴한컴퓨터 <-> 강력한 컴퓨터
+ ㄴ 전통적인 모델 VS 클라우드 컴퓨팅 모델 :
+   ㄴ 전통적인 모델은 서버의 요청수가 많으면 서버의 크기를 직접 구매하고 설정하는데 이는 요청에 유연하고 신속하게 대응하기 힘들다
+   ㄴ 클라우드 컴퓨팅 모델은 서버의 요청수가 많아도 서버의 확장이 쉽기 때문에 유연하고 신속하게 대응할 수는 있지만 가상머신을 사용하기 떄문에 성능면에서 전통적읜 모델을 따라가기 힘들지만 경제적이다 => scalability
+- Scale up : 컴퓨터 수요가 늘어나면 더 좋은 컴퓨터로 업그레이드 하여 대체 / 컴퓨터 2대가 필요함 / 공격(클) --> 수비(서)
+- 스트래스 테스트 : 수비(워드프레스)
+
+++ 얼리기
+
+ ---------------------------------------------------- PHP----------------------------------------------------------------
+
+WAMP : window + apache + mysql + php // + phpmyadmin 
+환경설정 : display_errors = On ( => off ) // opcache.enable = 1 ( => 0) // 이것들은 수업이 끝나면 다시 바꿔놔야함 // [php.ini]
+
+php 원리 : <?php?>
+-                  (index.html)
+  web browser <---> web server(apache)      php // web server가 알아서 할 수 있는 수준
+                  (index.php)                   (index.php)  
+  web browser <---> web server(apache) <-----> php // php가 개입해야하는 수준 // php파일엔 html안에 <?php?>가 기생해 있어서 php가 보고 해석한 후 html로만 구성된 파일을 웹서버로 전달한다.
+- 출력 방법 : echo / print();
+
+데이터 타입 : 숫자 + 연산자/ 문자열__(생략) 
+- '.' : 문자열 이어 붙이기 // '+' 가 아님
+- strlen('문자열') : 문자열 길이 출력
+
+변수 : $변수명 // 데이터 변경 수월
+
+URL 파라미터 :  parametaer.php?name=이름(URL)&address=주소
+~~~
+안녕하세요. <?php echo $_GET['address']; ?> 에 사시는 <?php echo $_GET['name']; ?> 님 // url의 name을 받아서 페이지마다 이름을 달리해서 출력가능함.
+~~~~
+
+함수의 사용-활용 : 
+- 사용 : ex) strlen() / nl2br() / var_dump()
+ ㄴ int strlen(string $string) //  괄호안에 $string을 넣으면 길이를 int로 반환함 
+ ㄴ string nl2br( string $string [, bool $is_xhtml = true] ) // nl을 <br/>로 바꿔줌
+ ㄴ var_dump('11') => string(2) '11' / var_dunp(1+1); => int(2)
+- 활용 : ex) file_get_contents()
+ ㄴ string file_get_contents( string $filename [, bool $use_include_path = false [, resource $context [, int $offset = 0 [, int $maxler]]]])
+ ㄴ ex) echo file_get_contents("data/" . $_GET['id']);
+
+제어문 : 조건문과 반복문
+조건문 : == | != | > | < | >= | <= | === | !=== | // true & false 반환 // if / else if / else 
+- bool isset(mixed $var [, miced $...]) //  값이 무엇이든지 있으면 true 없으면 false를 반환 / unset('값') : 값을 지워버림 null화
+반복문 : while
+- array array([mixed $...])
+ex) $coworkers = array('egoing', 'leezche', 'duru', 'taeho');
+     echo $coworkers[1];
+     echo count($coworkers[1]);
+     array_push($coworkers, "grabitte");
+scandir('경로') : 디렉토리 스캔 후 / 항목들을 배열로 리턴
+ex)$list = scandir('./data');
+
+함수 
+- function 함수이름(인자){ 내용 }; => 정의
+- 함수이름(인자); => 사용
+- file_put_contents('파일이름', 값)
+
+form과 post
+-<form action="form.php" method="post"> // form.php로 넘어가고 방식은 post
+- method의 기본값은 get // post로 값을 보내면 url에 값이 보이지 않음
+- file_put_contents('./data/'.$_POST['title'], $_POST['description']);
+
+글생성
+- create.php 생성 -> index.php 복제 
+- form 태그로 create_process.php로 값 전달
+- create_process.php에서 file_put_contents()사용
+- header('Location : /index.php?id='.$_POST['title']); 해서 돌아가기
+
+글수정
+- index.php에 "update" a태그로 만듬 // if문으로 선택 받았을 때 보이도록 만듬
+- update.php 생성 -> index.php 복제
+- form 태그로 update_ing.php로 값 전달
+- hidden으로 현재 id(old_title) / text로 바꿀 title(title) / textarea로 바꿀 description(description) 전달
+- rename(기존 title 경로(old_title), 바꿀 title 경로(title));
+- file_put_contents(바뀐 title 경로(title), 바꿀 description(description) )
+- header('Location : /index.php?id='.$_POST['title']); 해서 돌아가기
+
+글삭제
+-
+-
+- 
+
+---------------------------------------------------- mysql---------------------------------------------------------------
